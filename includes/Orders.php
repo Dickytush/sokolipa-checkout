@@ -124,7 +124,14 @@ final class Orders {
 		self::remember_ref( $network->id(), $result->provider_ref, $order->get_id() );
 		self::pending_add( $order->get_id() );
 
-		Logger::info( 'push sent', array( 'order' => $order->get_id(), 'network' => $network->id(), 'ref' => $result->provider_ref ) );
+		Logger::info(
+			'push sent',
+			array(
+				'order'   => $order->get_id(),
+				'network' => $network->id(),
+				'ref'     => $result->provider_ref,
+			)
+		);
 
 		return $result->message;
 	}
@@ -200,7 +207,13 @@ final class Orders {
 			$result = $network->query_status( $order );
 		} catch ( NetworkException $e ) {
 			delete_transient( $lock );
-			Logger::error( 'status query failed', array( 'order' => $order->get_id(), 'error' => $e->getMessage() ) );
+			Logger::error(
+				'status query failed',
+				array(
+					'order' => $order->get_id(),
+					'error' => $e->getMessage(),
+				)
+			);
 			return new StatusResult( StatusResult::PENDING, '', __( 'Still checking with the network.', 'sokolipa-checkout' ) );
 		}
 
@@ -245,7 +258,13 @@ final class Orders {
 			}
 		}
 		if ( ! $order ) {
-			Logger::info( 'callback for unknown reference ignored', array( 'network' => $network->id(), 'ref' => $hint->provider_ref ) );
+			Logger::info(
+				'callback for unknown reference ignored',
+				array(
+					'network' => $network->id(),
+					'ref'     => $hint->provider_ref,
+				)
+			);
 			return false;
 		}
 
@@ -260,7 +279,14 @@ final class Orders {
 			$order->save();
 		}
 
-		Logger::info( 'callback received', array( 'order' => $order->get_id(), 'network' => $network->id(), 'claimed' => $hint->claimed ) );
+		Logger::info(
+			'callback received',
+			array(
+				'order'   => $order->get_id(),
+				'network' => $network->id(),
+				'claimed' => $hint->claimed,
+			)
+		);
 
 		self::confirm( $order, true );
 		return true;
@@ -309,7 +335,13 @@ final class Orders {
 		$order->payment_complete( $receipt );
 		$order->save();
 		self::pending_remove( $order->get_id() );
-		Logger::info( 'order paid', array( 'order' => $order->get_id(), 'receipt' => $receipt ) );
+		Logger::info(
+			'order paid',
+			array(
+				'order'   => $order->get_id(),
+				'receipt' => $receipt,
+			)
+		);
 	}
 
 	/**

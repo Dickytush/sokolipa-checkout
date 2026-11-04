@@ -22,7 +22,7 @@ final class Integration {
 	public function register() {
 		// Fires at init (priority 5); woocommerce_blocks_loaded has already fired by the time plugins_loaded 11 runs.
 		add_action( 'woocommerce_blocks_payment_method_type_registration', array( $this, 'register_method' ) );
-		add_action( 'woocommerce_rest_checkout_process_payment_with_context', array( $this, 'payment_data' ), 10, 2 );
+		add_action( 'woocommerce_rest_checkout_process_payment_with_context', array( $this, 'payment_data' ) );
 	}
 
 	/**
@@ -41,9 +41,8 @@ final class Integration {
 	 * The block checkout posts the network and phone as payment data; the gateway reads $_POST.
 	 *
 	 * @param \Automattic\WooCommerce\StoreApi\Payments\PaymentContext $context Payment context.
-	 * @param \Automattic\WooCommerce\StoreApi\Payments\PaymentResult  $result  Result (unused).
 	 */
-	public function payment_data( $context, &$result ) {
+	public function payment_data( $context ) {
 		if ( Plugin::GATEWAY_ID !== $context->payment_method ) {
 			return;
 		}

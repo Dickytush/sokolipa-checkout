@@ -45,43 +45,43 @@ final class Gateway extends \WC_Payment_Gateway {
 	 */
 	public function init_form_fields() {
 		$fields = array(
-			'enabled'          => array(
+			'enabled'         => array(
 				'title'   => __( 'Enable', 'sokolipa-checkout' ),
 				'type'    => 'checkbox',
 				'label'   => __( 'Enable Sokolipa Checkout', 'sokolipa-checkout' ),
 				'default' => 'no',
 			),
-			'title'            => array(
+			'title'           => array(
 				'title'       => __( 'Title at checkout', 'sokolipa-checkout' ),
 				'type'        => 'text',
 				'default'     => __( 'Mobile money', 'sokolipa-checkout' ),
 				'desc_tip'    => true,
 				'description' => __( 'What buyers see as the payment method name.', 'sokolipa-checkout' ),
 			),
-			'description'      => array(
+			'description'     => array(
 				'title'   => __( 'Description', 'sokolipa-checkout' ),
 				'type'    => 'textarea',
 				'default' => __( 'Pay with M-Pesa, MTN MoMo or Airtel Money. You will get a prompt on your phone.', 'sokolipa-checkout' ),
 			),
-			'simple_checkout'  => array(
+			'simple_checkout' => array(
 				'title'       => __( 'Simple checkout', 'sokolipa-checkout' ),
 				'type'        => 'checkbox',
 				'label'       => __( 'Ask buyers only for full name, phone number, network and delivery place', 'sokolipa-checkout' ),
 				'default'     => 'yes',
 				'description' => __( 'Hides the address, company and email fields on the classic checkout and adds a "Where should we deliver?" box. Shipping zones still use your store country.', 'sokolipa-checkout' ),
 			),
-			'ask_email'        => array(
+			'ask_email'       => array(
 				'title'   => __( 'Email', 'sokolipa-checkout' ),
 				'type'    => 'checkbox',
 				'label'   => __( 'Still ask for an email address (optional) so buyers get order emails', 'sokolipa-checkout' ),
 				'default' => 'no',
 			),
-			'delivery_label'   => array(
+			'delivery_label'  => array(
 				'title'   => __( 'Delivery field label', 'sokolipa-checkout' ),
 				'type'    => 'text',
 				'default' => __( 'Where should we deliver? (town, estate or street, and a landmark)', 'sokolipa-checkout' ),
 			),
-			'debug'            => array(
+			'debug'           => array(
 				'title'   => __( 'Debug log', 'sokolipa-checkout' ),
 				'type'    => 'checkbox',
 				'label'   => __( 'Write every request and response to WooCommerce > Status > Logs (source: sokolipa). Keys are never logged.', 'sokolipa-checkout' ),

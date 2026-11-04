@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
  */
 final class SimpleCheckout {
 
-	const FIELD = 'sokolipa_delivery_place';
+	const FIELD       = 'sokolipa_delivery_place';
 	const BLOCK_FIELD = 'sokolipa/delivery-place';
 
 	/**
@@ -30,27 +30,27 @@ final class SimpleCheckout {
 		add_filter( 'woocommerce_checkout_fields', array( $this, 'fields' ), 50 );
 		add_filter( 'woocommerce_enable_order_notes_field', array( $this, 'order_notes' ), 50 );
 		add_filter( 'woocommerce_cart_needs_shipping_address', array( $this, 'needs_shipping_address' ), 50 );
-		add_action( 'woocommerce_checkout_create_order', array( $this, 'save' ), 10, 2 );
+		add_action( 'woocommerce_checkout_create_order', array( $this, 'save' ) );
 		add_action( 'woocommerce_email_customer_details', array( $this, 'email' ), 30, 3 );
 		add_action( 'woocommerce_init', array( $this, 'block_field' ) );
 		add_filter( 'woocommerce_checkout_get_value', array( $this, 'values' ), 10, 2 );
-		add_action( 'woocommerce_store_api_checkout_update_order_from_request', array( $this, 'save_block_field' ), 10, 2 );
+		add_action( 'woocommerce_store_api_checkout_update_order_from_request', array( $this, 'save_block_field' ) );
 	}
 
 	/**
 	 * Gateway settings read straight from the option, so nothing here instantiates the gateways at init.
 	 *
-	 * @param string $key     Setting key.
-	 * @param string $default Default.
+	 * @param string $key      Setting key.
+	 * @param string $fallback Value when the setting is missing.
 	 * @return string
 	 */
-	private function setting( $key, $default = '' ) {
+	private function setting( $key, $fallback = '' ) {
 		static $settings = null;
 		if ( null === $settings ) {
 			$stored   = get_option( 'woocommerce_' . Plugin::GATEWAY_ID . '_settings', array() );
 			$settings = is_array( $stored ) ? $stored : array();
 		}
-		return isset( $settings[ $key ] ) ? (string) $settings[ $key ] : $default;
+		return isset( $settings[ $key ] ) ? (string) $settings[ $key ] : $fallback;
 	}
 
 	/**
@@ -99,9 +99,9 @@ final class SimpleCheckout {
 			return $fields;
 		}
 
-		$billing  = isset( $fields['billing'] ) ? $fields['billing'] : array();
-		$base     = wc_get_base_location();
-		$country  = isset( $base['country'] ) ? $base['country'] : '';
+		$billing = isset( $fields['billing'] ) ? $fields['billing'] : array();
+		$base    = wc_get_base_location();
+		$country = isset( $base['country'] ) ? $base['country'] : '';
 
 		$billing['billing_first_name'] = array(
 			'label'        => __( 'Full name', 'sokolipa-checkout' ),
@@ -225,9 +225,8 @@ final class SimpleCheckout {
 	 * Stores the delivery place and splits the full name.
 	 *
 	 * @param \WC_Order $order Order being created.
-	 * @param array     $data  Posted data.
 	 */
-	public function save( $order, $data ) {
+	public function save( $order ) {
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- WooCommerce verifies the checkout nonce.
 		$place = isset( $_POST[ self::FIELD ] ) ? sanitize_textarea_field( wp_unslash( $_POST[ self::FIELD ] ) ) : '';
 		if ( '' !== $place ) {
@@ -288,10 +287,9 @@ final class SimpleCheckout {
 	/**
 	 * Copies the block-checkout field into the same order meta the classic checkout uses.
 	 *
-	 * @param \WC_Order        $order   Order.
-	 * @param \WP_REST_Request $request Store API request.
+	 * @param \WC_Order $order Order.
 	 */
-	public function save_block_field( $order, $request ) {
+	public function save_block_field( $order ) {
 		if ( ! $order instanceof \WC_Order || ! function_exists( 'wc_get_container' ) ) {
 			return;
 		}

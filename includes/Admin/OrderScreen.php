@@ -55,6 +55,7 @@ final class OrderScreen {
 			__( 'Reference', 'sokolipa-checkout' ) => (string) $order->get_meta( Orders::META_REF ),
 			__( 'Attempts', 'sokolipa-checkout' )  => (string) (int) $order->get_meta( Orders::META_ATTEMPTS ),
 		);
+
 		$reason = (string) $order->get_meta( Orders::META_REASON );
 		if ( '' !== $reason ) {
 			$rows[ __( 'Last reason', 'sokolipa-checkout' ) ] = $reason;

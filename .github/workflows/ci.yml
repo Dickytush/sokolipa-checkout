@@ -51,10 +51,8 @@ jobs:
         run: for f in assets/js/*.js; do node --check "$f"; done
 
   phpcs:
-    name: Coding standards (advisory)
+    name: Coding standards
     runs-on: ubuntu-latest
-    # Advisory until the existing notices are cleaned up; see CONTRIBUTING.md.
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
 

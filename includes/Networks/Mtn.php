@@ -43,21 +43,27 @@ final class Mtn extends AbstractNetwork {
 	}
 
 	/**
-	 * @inheritDoc
+	 * Short machine id, used in settings keys, REST routes and order meta.
+	 *
+	 * @return string
 	 */
 	public function id() {
 		return 'mtn';
 	}
 
 	/**
-	 * @inheritDoc
+	 * Name buyers see at checkout.
+	 *
+	 * @return string
 	 */
 	public function label() {
 		return 'MTN MoMo';
 	}
 
 	/**
-	 * @inheritDoc
+	 * ISO 3166-1 alpha-2 country the configured account serves.
+	 *
+	 * @return string
 	 */
 	public function country() {
 		$market = $this->market();
@@ -65,7 +71,9 @@ final class Mtn extends AbstractNetwork {
 	}
 
 	/**
-	 * @inheritDoc
+	 * ISO 4217 currency the configured account charges in.
+	 *
+	 * @return string
 	 */
 	public function currency() {
 		if ( ! $this->is_live() ) {
@@ -76,7 +84,9 @@ final class Mtn extends AbstractNetwork {
 	}
 
 	/**
-	 * @inheritDoc
+	 * Whether the network is switched on and has every key it needs.
+	 *
+	 * @return bool
 	 */
 	public function is_configured() {
 		return $this->enabled()
@@ -87,7 +97,9 @@ final class Mtn extends AbstractNetwork {
 	}
 
 	/**
-	 * @inheritDoc
+	 * Settings fields for this network, keyed with the network id prefix.
+	 *
+	 * @return array
 	 */
 	public function form_fields() {
 		$fields = $this->section(
@@ -134,7 +146,12 @@ final class Mtn extends AbstractNetwork {
 	}
 
 	/**
-	 * @inheritDoc
+	 * Sends the payment prompt to the buyer's phone.
+	 *
+	 * @param \WC_Order $order  The order being paid.
+	 * @param string    $msisdn Phone number in international format without '+'.
+	 * @return PushResult
+	 * @throws NetworkException When the operator rejects the request or cannot be reached.
 	 */
 	public function request_push( \WC_Order $order, $msisdn ) {
 		$reference = wp_generate_uuid4();
@@ -167,7 +184,14 @@ final class Mtn extends AbstractNetwork {
 
 		if ( 202 !== $response['status'] ) {
 			$message = isset( $response['body']['message'] ) ? (string) $response['body']['message'] : '';
-			Logger::error( 'mtn: request to pay rejected', array( 'order' => $order->get_id(), 'status' => $response['status'], 'message' => $message ) );
+			Logger::error(
+				'mtn: request to pay rejected',
+				array(
+					'order'   => $order->get_id(),
+					'status'  => $response['status'],
+					'message' => $message,
+				)
+			);
 			throw new NetworkException( esc_html( $this->friendly_error( $response['status'], $message ) ) );
 		}
 
@@ -178,7 +202,11 @@ final class Mtn extends AbstractNetwork {
 	}
 
 	/**
-	 * @inheritDoc
+	 * Asks the operator for the authoritative state of the push recorded on the order.
+	 *
+	 * @param \WC_Order $order The order.
+	 * @return StatusResult
+	 * @throws NetworkException When the operator cannot be reached.
 	 */
 	public function query_status( \WC_Order $order ) {
 		$reference = (string) $order->get_meta( '_sokolipa_provider_ref' );
@@ -211,7 +239,10 @@ final class Mtn extends AbstractNetwork {
 	}
 
 	/**
-	 * @inheritDoc
+	 * Reads an inbound callback. The result is only a hint: the order changes after query_status() confirms it.
+	 *
+	 * @param \WP_REST_Request $request The callback request.
+	 * @return CallbackHint|null Null when the body is not a callback from this network.
 	 */
 	public function parse_callback( \WP_REST_Request $request ) {
 		$body = $request->get_json_params();
@@ -259,7 +290,7 @@ final class Mtn extends AbstractNetwork {
 					'POST',
 					$this->base() . '/collection/token/',
 					array(
-						'Authorization'             => 'Basic ' . base64_encode( $user . ':' . $key ),
+						'Authorization'             => 'Basic ' . base64_encode( $user . ':' . $key ), // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode -- HTTP Basic authentication.
 						'Ocp-Apim-Subscription-Key' => $sub,
 					),
 					''
@@ -300,14 +331,14 @@ final class Mtn extends AbstractNetwork {
 	 */
 	private function reason_text( $reason ) {
 		$map = array(
-			'PAYER_NOT_FOUND'                => __( 'That number is not registered on MTN MoMo.', 'sokolipa-checkout' ),
-			'NOT_ENOUGH_FUNDS'               => __( 'The MoMo balance is not enough for this order.', 'sokolipa-checkout' ),
-			'PAYER_LIMIT_REACHED'            => __( 'The MoMo account has reached its limit for today.', 'sokolipa-checkout' ),
-			'EXPIRED'                        => __( 'The prompt expired before it was approved.', 'sokolipa-checkout' ),
-			'APPROVAL_REJECTED'              => __( 'The payment was rejected on the phone.', 'sokolipa-checkout' ),
-			'INTERNAL_PROCESSING_ERROR'      => __( 'MTN could not process the prompt. Please try again.', 'sokolipa-checkout' ),
-			'TRANSACTION_CANCELED'           => __( 'The payment was cancelled.', 'sokolipa-checkout' ),
-			'SERVICE_UNAVAILABLE'            => __( 'MTN MoMo is temporarily unavailable. Please try again shortly.', 'sokolipa-checkout' ),
+			'PAYER_NOT_FOUND'           => __( 'That number is not registered on MTN MoMo.', 'sokolipa-checkout' ),
+			'NOT_ENOUGH_FUNDS'          => __( 'The MoMo balance is not enough for this order.', 'sokolipa-checkout' ),
+			'PAYER_LIMIT_REACHED'       => __( 'The MoMo account has reached its limit for today.', 'sokolipa-checkout' ),
+			'EXPIRED'                   => __( 'The prompt expired before it was approved.', 'sokolipa-checkout' ),
+			'APPROVAL_REJECTED'         => __( 'The payment was rejected on the phone.', 'sokolipa-checkout' ),
+			'INTERNAL_PROCESSING_ERROR' => __( 'MTN could not process the prompt. Please try again.', 'sokolipa-checkout' ),
+			'TRANSACTION_CANCELED'      => __( 'The payment was cancelled.', 'sokolipa-checkout' ),
+			'SERVICE_UNAVAILABLE'       => __( 'MTN MoMo is temporarily unavailable. Please try again shortly.', 'sokolipa-checkout' ),
 		);
 		$key = strtoupper( trim( (string) $reason ) );
 		if ( isset( $map[ $key ] ) ) {

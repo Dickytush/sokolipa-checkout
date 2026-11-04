@@ -29,19 +29,17 @@ define( 'SOKOLIPA_URL', plugin_dir_url( __FILE__ ) );
  * Autoloader for the Sokolipa\ namespace: Sokolipa\Networks\Mpesa -> includes/Networks/Mpesa.php.
  */
 spl_autoload_register(
-	static function ( $class ) {
-		if ( 0 !== strpos( $class, 'Sokolipa\\' ) ) {
+	static function ( $class_name ) {
+		if ( 0 !== strpos( $class_name, 'Sokolipa\\' ) ) {
 			return;
 		}
-		$relative = str_replace( '\\', DIRECTORY_SEPARATOR, substr( $class, strlen( 'Sokolipa\\' ) ) );
+		$relative = str_replace( '\\', DIRECTORY_SEPARATOR, substr( $class_name, strlen( 'Sokolipa\\' ) ) );
 		$path     = SOKOLIPA_DIR . 'includes' . DIRECTORY_SEPARATOR . $relative . '.php';
 		if ( is_readable( $path ) ) {
 			require_once $path;
 		}
 	}
 );
-
-require_once SOKOLIPA_DIR . 'includes/Networks/Results.php';
 
 /**
  * WooCommerce feature compatibility: custom order tables (HPOS) and the block checkout.

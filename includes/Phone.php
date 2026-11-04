@@ -154,6 +154,7 @@ final class Phone {
 			'NG' => '0803 123 4567',
 			'CM' => '6 71 23 45 67',
 		);
+
 		$country = strtoupper( $country );
 		return isset( $examples[ $country ] ) ? $examples[ $country ] : '0' . str_repeat( '7', 2 ) . ' 123 4567';
 	}

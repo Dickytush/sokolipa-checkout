@@ -129,7 +129,6 @@ spl_autoload_register(
 		}
 	}
 );
-require_once SOKOLIPA_DIR . 'includes/Networks/Results.php';
 
 /**
  * Replaces the gateway settings and clears every cache that reads them.

@@ -27,17 +27,17 @@ abstract class AbstractNetwork implements Network {
 	/**
 	 * Reads one of this network's settings (the key is prefixed with the network id).
 	 *
-	 * @param string $key     Unprefixed key, e.g. 'consumer_key'.
-	 * @param string $default Default.
+	 * @param string $key      Unprefixed key, e.g. 'consumer_key'.
+	 * @param string $fallback Value when the setting is missing.
 	 * @return string
 	 */
-	protected function setting( $key, $default = '' ) {
+	protected function setting( $key, $fallback = '' ) {
 		if ( null === self::$settings ) {
 			$stored         = get_option( 'woocommerce_' . Plugin::GATEWAY_ID . '_settings', array() );
 			self::$settings = is_array( $stored ) ? $stored : array();
 		}
 		$full = $this->id() . '_' . $key;
-		return isset( self::$settings[ $full ] ) ? trim( (string) self::$settings[ $full ] ) : $default;
+		return isset( self::$settings[ $full ] ) ? trim( (string) self::$settings[ $full ] ) : $fallback;
 	}
 
 	/**
@@ -141,7 +141,13 @@ abstract class AbstractNetwork implements Network {
 		if ( is_wp_error( $response ) ) {
 			$message   = $response->get_error_message();
 			$ambiguous = 'POST' === $method && false !== stripos( $message, 'timed out' );
-			Logger::error( $this->id() . ': request failed', array( 'url' => $this->path_of( $url ), 'error' => $message ) );
+			Logger::error(
+				$this->id() . ': request failed',
+				array(
+					'url'   => $this->path_of( $url ),
+					'error' => $message,
+				)
+			);
 			/* translators: %s: network name */
 			$unreachable            = new NetworkException( esc_html( sprintf( __( 'Could not reach %s. Please try again in a moment.', 'sokolipa-checkout' ), $this->label() ) ) );
 			$unreachable->ambiguous = $ambiguous;

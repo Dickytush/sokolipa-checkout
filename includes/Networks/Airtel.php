@@ -45,21 +45,27 @@ final class Airtel extends AbstractNetwork {
 	}
 
 	/**
-	 * @inheritDoc
+	 * Short machine id, used in settings keys, REST routes and order meta.
+	 *
+	 * @return string
 	 */
 	public function id() {
 		return 'airtel';
 	}
 
 	/**
-	 * @inheritDoc
+	 * Name buyers see at checkout.
+	 *
+	 * @return string
 	 */
 	public function label() {
 		return 'Airtel Money';
 	}
 
 	/**
-	 * @inheritDoc
+	 * ISO 3166-1 alpha-2 country the configured account serves.
+	 *
+	 * @return string
 	 */
 	public function country() {
 		$country = strtoupper( $this->setting( 'country', 'UG' ) );
@@ -68,7 +74,9 @@ final class Airtel extends AbstractNetwork {
 	}
 
 	/**
-	 * @inheritDoc
+	 * ISO 4217 currency the configured account charges in.
+	 *
+	 * @return string
 	 */
 	public function currency() {
 		$markets = self::markets();
@@ -76,7 +84,9 @@ final class Airtel extends AbstractNetwork {
 	}
 
 	/**
-	 * @inheritDoc
+	 * Whether the network is switched on and has every key it needs.
+	 *
+	 * @return bool
 	 */
 	public function is_configured() {
 		return $this->enabled()
@@ -85,7 +95,9 @@ final class Airtel extends AbstractNetwork {
 	}
 
 	/**
-	 * @inheritDoc
+	 * Settings fields for this network, keyed with the network id prefix.
+	 *
+	 * @return array
 	 */
 	public function form_fields() {
 		$fields = $this->section(
@@ -129,7 +141,12 @@ final class Airtel extends AbstractNetwork {
 	}
 
 	/**
-	 * @inheritDoc
+	 * Sends the payment prompt to the buyer's phone.
+	 *
+	 * @param \WC_Order $order  The order being paid.
+	 * @param string    $msisdn Phone number in international format without '+'.
+	 * @return PushResult
+	 * @throws NetworkException When the operator rejects the request or cannot be reached.
 	 */
 	public function request_push( \WC_Order $order, $msisdn ) {
 		$country  = $this->country();
@@ -165,12 +182,20 @@ final class Airtel extends AbstractNetwork {
 			$e->provider_ref = $txn_id;
 			throw $e;
 		}
-		$data     = $response['body'];
-		$ok       = isset( $data['status']['success'] ) ? (bool) $data['status']['success'] : ( 200 === $response['status'] );
+		$data = $response['body'];
+		$ok   = isset( $data['status']['success'] ) ? (bool) $data['status']['success'] : ( 200 === $response['status'] );
 
 		if ( ! $ok || 200 !== $response['status'] ) {
 			$message = isset( $data['status']['message'] ) ? (string) $data['status']['message'] : '';
-			Logger::error( 'airtel: push rejected', array( 'order' => $order->get_id(), 'status' => $response['status'], 'message' => $message, 'code' => isset( $data['status']['result_code'] ) ? $data['status']['result_code'] : '' ) );
+			Logger::error(
+				'airtel: push rejected',
+				array(
+					'order'   => $order->get_id(),
+					'status'  => $response['status'],
+					'message' => $message,
+					'code'    => isset( $data['status']['result_code'] ) ? $data['status']['result_code'] : '',
+				)
+			);
 			throw new NetworkException( esc_html( $this->friendly_error( $response['status'], $message ) ) );
 		}
 
@@ -184,7 +209,11 @@ final class Airtel extends AbstractNetwork {
 	}
 
 	/**
-	 * @inheritDoc
+	 * Asks the operator for the authoritative state of the push recorded on the order.
+	 *
+	 * @param \WC_Order $order The order.
+	 * @return StatusResult
+	 * @throws NetworkException When the operator cannot be reached.
 	 */
 	public function query_status( \WC_Order $order ) {
 		$txn_id = (string) $order->get_meta( '_sokolipa_provider_ref' );
@@ -207,7 +236,10 @@ final class Airtel extends AbstractNetwork {
 	}
 
 	/**
-	 * @inheritDoc
+	 * Reads an inbound callback. The result is only a hint: the order changes after query_status() confirms it.
+	 *
+	 * @param \WP_REST_Request $request The callback request.
+	 * @return CallbackHint|null Null when the body is not a callback from this network.
 	 */
 	public function parse_callback( \WP_REST_Request $request ) {
 		$body = $request->get_json_params();
@@ -288,7 +320,7 @@ final class Airtel extends AbstractNetwork {
 		$payload = wp_json_encode( $body );
 
 		$encrypted = openssl_encrypt( $payload, 'AES-256-CBC', $aes_key, OPENSSL_RAW_DATA, $iv );
-		$key_iv    = base64_encode( $aes_key ) . ':' . base64_encode( $iv );
+		$key_iv    = base64_encode( $aes_key ) . ':' . base64_encode( $iv ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode -- Airtel payments v2 wire format.
 		$x_key     = '';
 
 		if ( false === $encrypted || ! openssl_public_encrypt( $key_iv, $x_key, $key, OPENSSL_PKCS1_PADDING ) ) {
@@ -296,8 +328,8 @@ final class Airtel extends AbstractNetwork {
 		}
 
 		return array(
-			'x-signature' => base64_encode( $encrypted ),
-			'x-key'       => base64_encode( $x_key ),
+			'x-signature' => base64_encode( $encrypted ), // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode -- Airtel payments v2 wire format.
+			'x-key'       => base64_encode( $x_key ), // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode -- Airtel payments v2 wire format.
 		);
 	}
 

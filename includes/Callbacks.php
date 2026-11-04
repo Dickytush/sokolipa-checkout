@@ -37,11 +37,9 @@ final class Callbacks {
 			array(
 				'methods'             => array( 'POST', 'PUT' ), // MTN delivers callbacks with PUT.
 				'callback'            => array( $this, 'callback' ),
-				/*
-				 * Public by design: the operators have no WordPress login. A callback is
-				 * only ever a hint; Orders::apply_callback() re-checks with the operator's
-				 * status API before any order is marked paid.
-				 */
+				// Public by design: the operators have no WordPress login. A callback is
+				// only ever a hint; Orders::apply_callback() re-checks with the operator's
+				// status API before any order is marked paid.
 				'permission_callback' => '__return_true',
 			)
 		);

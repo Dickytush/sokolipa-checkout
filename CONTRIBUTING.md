@@ -67,7 +67,7 @@ In the pull request, link the operator's API documentation and say which of thos
 
 ## Coding standards
 
-- Follow the [WordPress Coding Standards](https://developer.wordpress.org/coding-standards/wordpress-coding-standards/php/); the rules are in `phpcs.xml.dist`. The PHPCS job in CI is advisory while the remaining notices are cleaned up, and fixing them is a good first contribution. New code should not add notices.
+- Follow the [WordPress Coding Standards](https://developer.wordpress.org/coding-standards/wordpress-coding-standards/php/); the rules are in `phpcs.xml.dist` and CI checks every pull request against them. `composer phpcbf` fixes most layout issues for you.
 - Code must pass WordPress.org's [Plugin Check](https://wordpress.org/plugins/plugin-check/) with no errors.
 - Stay compatible with PHP 7.4 and add no runtime dependencies: the plugin must work from a plain zip.
 - Sanitise input as early as possible and escape output as late as possible. Every user-facing string is translatable with the `sokolipa-checkout` text domain.
@@ -80,7 +80,7 @@ In the pull request, link the operator's API documentation and say which of thos
 - Branch from `main` and keep each pull request to one topic.
 - Explain what changed and why, and how you tested it: network, sandbox or live, block or classic checkout, and the PHP, WordPress and WooCommerce versions. Add screenshots for anything a buyer or merchant sees.
 - Add a line to the changelog at the bottom of `readme.txt`.
-- CI must pass. It checks PHP syntax on PHP 7.4 to 8.4, runs the unit tests and checks the JavaScript.
+- CI must pass. It checks PHP syntax on PHP 7.4 to 8.4, runs the unit tests, checks the coding standards and checks the JavaScript.
 - Contributions are accepted under the project's licence, GPL-2.0-or-later.
 
 ## Releasing (maintainers)

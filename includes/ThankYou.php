@@ -63,18 +63,18 @@ final class ThankYou {
 			'sokolipa-waiting',
 			'sokolipaWaiting',
 			array(
-				'orderId'  => $order->get_id(),
-				'key'      => $order->get_order_key(),
-				'restUrl'  => esc_url_raw( rest_url( 'sokolipa/v1/' ) ),
-				'status'   => $status,
-				'i18n'     => array(
-					'waiting'   => __( 'Waiting for you to approve the prompt…', 'sokolipa-checkout' ),
-					'paid'      => __( 'Payment received. Thank you!', 'sokolipa-checkout' ),
-					'failed'    => __( 'The payment did not go through.', 'sokolipa-checkout' ),
-					'sending'   => __( 'Sending a new prompt…', 'sokolipa-checkout' ),
-					'sent'      => __( 'A new prompt is on its way to your phone.', 'sokolipa-checkout' ),
-					'slow'      => __( 'No prompt yet? Make sure the phone is on and has signal. You can send it again below.', 'sokolipa-checkout' ),
-					'error'     => __( 'Something went wrong. Please try again.', 'sokolipa-checkout' ),
+				'orderId' => $order->get_id(),
+				'key'     => $order->get_order_key(),
+				'restUrl' => esc_url_raw( rest_url( 'sokolipa/v1/' ) ),
+				'status'  => $status,
+				'i18n'    => array(
+					'waiting' => __( 'Waiting for you to approve the prompt…', 'sokolipa-checkout' ),
+					'paid'    => __( 'Payment received. Thank you!', 'sokolipa-checkout' ),
+					'failed'  => __( 'The payment did not go through.', 'sokolipa-checkout' ),
+					'sending' => __( 'Sending a new prompt…', 'sokolipa-checkout' ),
+					'sent'    => __( 'A new prompt is on its way to your phone.', 'sokolipa-checkout' ),
+					'slow'    => __( 'No prompt yet? Make sure the phone is on and has signal. You can send it again below.', 'sokolipa-checkout' ),
+					'error'   => __( 'Something went wrong. Please try again.', 'sokolipa-checkout' ),
 				),
 			)
 		);
