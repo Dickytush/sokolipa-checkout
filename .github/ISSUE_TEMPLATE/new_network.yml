@@ -1,0 +1,56 @@
+name: Add a network
+description: Ask for, or offer to build, support for another mobile-money network.
+labels: ["new network"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        New networks are the most useful contribution to Sokolipa. The guide in CONTRIBUTING.md ("Adding a network") explains what an adapter needs.
+  - type: input
+    id: network
+    attributes:
+      label: Network and operator
+      placeholder: Orange Money (Orange Côte d'Ivoire)
+    validations:
+      required: true
+  - type: input
+    id: countries
+    attributes:
+      label: Countries and currencies
+      placeholder: Côte d'Ivoire (XOF)
+    validations:
+      required: true
+  - type: input
+    id: docs
+    attributes:
+      label: API documentation
+      description: Link to the operator's developer portal or API reference.
+    validations:
+      required: true
+  - type: dropdown
+    id: prompt
+    attributes:
+      label: How does the buyer approve?
+      options:
+        - STK / USSD push prompt on the phone
+        - Request-to-pay approval in an app or menu
+        - One-time code the buyer types at checkout
+        - Not sure
+    validations:
+      required: true
+  - type: dropdown
+    id: sandbox
+    attributes:
+      label: Is there a sandbox or test environment?
+      options:
+        - "Yes, self-service"
+        - "Yes, after signing up as a merchant"
+        - "No"
+        - Not sure
+  - type: checkboxes
+    id: help
+    attributes:
+      label: Can you help?
+      options:
+        - label: I can write the adapter
+        - label: I can test it with a merchant account in this market

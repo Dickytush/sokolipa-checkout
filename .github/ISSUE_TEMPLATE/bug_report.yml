@@ -1,0 +1,71 @@
+name: Bug report
+description: Something does not work as expected.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report this.
+        **Do not paste API keys, passkeys, tokens or customers' phone numbers**, not even sandbox ones. For security problems, use the private report described in SECURITY.md instead of this form.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Enable M-Pesa in sandbox mode
+        2. Place an order on the block checkout
+        3. ...
+    validations:
+      required: true
+  - type: dropdown
+    id: network
+    attributes:
+      label: Network
+      multiple: true
+      options:
+        - M-Pesa (Daraja)
+        - MTN MoMo
+        - Airtel Money
+        - Not network-specific
+    validations:
+      required: true
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Environment
+      options:
+        - Sandbox / test
+        - Live
+    validations:
+      required: true
+  - type: dropdown
+    id: checkout
+    attributes:
+      label: Checkout type
+      options:
+        - Block checkout
+        - Classic (shortcode) checkout
+        - Not sure
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: Plugin, WordPress, WooCommerce and PHP versions.
+      placeholder: Sokolipa 0.1.0, WordPress 6.8, WooCommerce 10.5, PHP 8.2
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Switch on "Debug log" in the plugin settings, reproduce the problem, then copy the relevant lines from WooCommerce → Status → Logs (source "sokolipa"). Check that no keys or phone numbers remain.
+      render: shell

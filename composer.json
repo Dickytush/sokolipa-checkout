@@ -1,0 +1,38 @@
+{
+	"name": "dickytush/sokolipa-checkout",
+	"description": "Free, open-source mobile-money checkout for WooCommerce: M-Pesa, MTN MoMo and Airtel Money with the merchant's own keys.",
+	"type": "wordpress-plugin",
+	"license": "GPL-2.0-or-later",
+	"homepage": "https://github.com/Dickytush/sokolipa-checkout",
+	"support": {
+		"issues": "https://github.com/Dickytush/sokolipa-checkout/issues",
+		"source": "https://github.com/Dickytush/sokolipa-checkout"
+	},
+	"authors": [
+		{
+			"name": "Snap Pay Solutions",
+			"homepage": "https://snapaysolutions.com"
+		}
+	],
+	"require": {
+		"php": ">=7.4"
+	},
+	"require-dev": {
+		"dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+		"phpcompatibility/phpcompatibility-wp": "^2.1",
+		"wp-coding-standards/wpcs": "^3.1"
+	},
+	"config": {
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		},
+		"sort-packages": true
+	},
+	"scripts": {
+		"test": "php tests/run.php",
+		"lint": "find . -name '*.php' -not -path './vendor/*' -not -path './dist/*' -print0 | xargs -0 -n1 php -l",
+		"phpcs": "phpcs",
+		"phpcbf": "phpcbf",
+		"build": "bash bin/build-zip.sh"
+	}
+}
