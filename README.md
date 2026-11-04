@@ -51,7 +51,7 @@ A payment plugin is only as good as its "paid" decision, so that decision lives 
 
 - **From a release:** download `sokolipa-checkout.zip` from the [latest release](https://github.com/Dickytush/sokolipa-checkout/releases/latest), then in WordPress go to **Plugins → Add New → Upload Plugin**.
 - **From source:** clone this repository into `wp-content/plugins/sokolipa-checkout`. There is no build step.
-- **From WordPress.org:** the plugin has been submitted to the plugin directory; this section will link to it once it is approved.
+- **From WordPress.org:** the plugin is on its way to the plugin directory; this section will link to it once it is approved.
 
 ## Configuration
 
