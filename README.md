@@ -109,7 +109,7 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request. Issues la
 - More networks: Vodacom M-Pesa (Tanzania, DR Congo, Mozambique, Lesotho), Mixx by Yas, Orange Money, Wave, Moov Money, EcoCash, Halopesa and more
 - Refunds through the operators' reversal APIs
 - Translations, starting with Swahili, French and Portuguese
-- A hosted, open-source Shopify app built on the same network adapters
+- A Shopify app built on the same network adapters: an experimental draft lives in [sokolipa-shopify](https://github.com/Dickytush/sokolipa-shopify), and its README explains what stands between it and the Shopify App Store
 - Plugin Check and end-to-end tests in CI
 
 ## Security
